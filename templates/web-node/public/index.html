@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>service</title>
+<style>
+  body { font-family: system-ui, sans-serif; margin: 24px; max-width: 960px; }
+  #out { white-space: pre-wrap; background: #f4f4f4; padding: 12px; border-radius: 6px; }
+</style>
+</head>
+<body>
+<h1>service</h1>
+<button id="ping">상태 확인</button>
+<div id="out"></div>
+<script>
+  document.getElementById('ping').onclick = async () => {
+    const r = await fetch('/api/health');
+    document.getElementById('out').textContent = JSON.stringify(await r.json(), null, 2);
+  };
+</script>
+</body>
+</html>
