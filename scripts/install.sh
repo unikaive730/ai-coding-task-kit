@@ -110,4 +110,4 @@ echo "설치 끝: $f · .agents/skills ($(ls .agents/skills | tr '\n' ' ')) · d
 echo "다음: codex → 신뢰 확인에서 '신뢰' → /status · /skills 확인 → 카드 01 붙이기"
 echo "  커밋은 Codex 가 요청마다 스스로 한다. 첫 커밋 때 승인 창이 git add · git commit 차례로 두 번 뜬다 → 둘 다 '다시 묻지 않기'(p)."
 [ -e AGENTS.override.md ] && echo "  /status 의 AGENTS 목록에 AGENTS.override.md 가 없으면 첫 요청 맨 앞에 \$kit-rules 를 붙입니다."
-echo "카드: .agents/kit/CARDS.md (에디터로 열어 두고 복사, 탐색기에 안 보이면 Ctrl+P 로 CARDS.md) · 스킬은 \$이름 으로 부른다 (\$interview-requirements · \$plan-delegate · \$verify-submit · \$handoff)"
+echo "카드: .agents/kit/CARDS.md (에디터로 열어 두고 복사 → 터미널에는 Ctrl+Shift+V, 탐색기에 안 보이면 Ctrl+P 로 CARDS.md) · 스킬은 \$이름 으로 부른다 (\$interview-requirements · \$plan-delegate · \$verify-submit · \$handoff)"

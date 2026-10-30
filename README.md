@@ -31,7 +31,7 @@ codex        # 신뢰 확인에서 '신뢰' → /status 로 AGENTS.md · /skills
 
 ## 쓰는 법
 
-카드 파일 `.agents/kit/CARDS.md` 를 에디터에 열어 두고, 코드 블록 안만 복사해 `<...>` 를 채워 codex 에 붙인다. 탐색기에 `.agents` 가 안 보이면 Ctrl+P 로 `CARDS.md` 를 찾거나 터미널에서 `cat .agents/kit/CARDS.md` 로 보고 복사한다. 카드는 모두 요청 4요소(목표 · 맥락 · 제약 · 완료 조건)로 되어 있다.
+카드 파일 `.agents/kit/CARDS.md` 를 에디터에 열어 두고, 코드 블록 안만 복사해 `<...>` 를 채워 codex 에 붙인다. 터미널 붙여넣기는 Ctrl+Shift+V(맥 Cmd+V)이고, 선택 없이 누른 Ctrl+C 는 실행 중인 codex·서버를 멈춘다. 탐색기에 `.agents` 가 안 보이면 Ctrl+P 로 `CARDS.md` 를 찾거나 터미널에서 `cat .agents/kit/CARDS.md` 로 보고 복사한다. 카드는 모두 요청 4요소(목표 · 맥락 · 제약 · 완료 조건)로 되어 있다.
 
 | 언제 | 카드 | 스킬 |
 |---|---|---|
