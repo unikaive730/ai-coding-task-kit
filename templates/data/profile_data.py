@@ -5,7 +5,7 @@
 확인할 것: 표기만 다른 값(Etch01·ETCH-01·degC=C) · 줄임 표기(L1·line-1) · 시간대·날짜 형식 섞임(일/월/연 포함)
            · 단위 섞임 · 빈 칸 · 숫자 열 속 글자 · 극단값
 --by 열[,열]: 그 열 값마다 숫자 열의 최소·평균·최대 (예: --by equipment,sensor 로 설비·센서별 단위 차이 찾기)
-           --by 가 없고 200행 이상이면 값 종류 2~12개인 글자 열(두 열이면 종류 곱 24 이하)로 자동으로 묶는다
+           --by 가 없고 200행 이상이면 값 종류 2~12개인 글자 열 한두 개로 자동으로 묶는다 (24줄 안에 들 때만)
 큰 파일도 한 줄씩 읽는다. 값 종류는 열마다 2만 개까지만 센다.
 """
 import csv
@@ -261,8 +261,9 @@ def profile(path, by=None, max_rows=500000):
     limit, label = 80, by
     if not by and n >= 200 and any(c.kind() == "숫자" for c in cols):
         cand = [i for i, c in enumerate(cols) if c.kind() == "글자" and 2 <= len(c.vals) <= 12 and not c.overflow]
-        kv = lambda ks: math.prod(len(cols[i].vals) for i in ks)  # noqa: E731
-        opts = [[i, j] for i in cand for j in cand if i < j and kv([i, j]) <= 24] or [[i] for i in cand]
+        nnum = sum(c.kind() == "숫자" for c in cols)  # 출력 줄 = 묶음 수 × 숫자 열 수 (24줄 안에 드는 것만)
+        kv = lambda ks: math.prod(len(cols[i].vals) for i in ks) * nnum  # noqa: E731
+        opts = [[i, j] for i in cand for j in cand if i < j and kv([i, j]) <= 24] or [[i] for i in cand if kv([i]) <= 24]
         keys = max(opts, key=kv) if opts else []
         if keys:
             limit, label = 24, ",".join(header[i] for i in keys) + " (자동)"
