@@ -13,10 +13,10 @@ description: 결과물을 한 줄 명령으로 연결해 검증할 때와 제출
 - 끝나면 커밋
 
 ## 문서·제출 점검 (한 요청으로)
-0. 깨끗한 확인: `d=$(mktemp -d)/c && git clone -q . "$d" && cd "$d"` 에서 README 명령을 그대로 돌린다. 작업 폴더 안에 복사본·worktree 를 만들지 않는다
+0. 깨끗한 확인: 서버가 없으면 `d=$(mktemp -d)/c && git clone -q . "$d" && cd "$d"` 에서 README 명령을 그대로 돌린다. 서버가 있으면 이미 승인된 `python3 verify.py clean` 처럼 clone 을 안에서 하는 검사로, 포트는 PORT=0. 작업 폴더 안에 복사본·worktree 를 만들지 않는다
 1. `docs/AGREEMENT.md` 과제 요구 표와 제출 파일명 · 경로 · 실행 방법 대조
 2. README: 실행 한 줄(실제로 돌린 python3·python 그대로) · 구조 · 성공 기준 결과 숫자 · 한계
-3. 서버가 있으면 `0.0.0.0` 과 포트가 README 와 같은지
+3. 서버가 있으면 `0.0.0.0` 과 포트가 README 와 같은지. 사람이 띄운 서버의 포트로 검사하지 않는다. 포트 충돌은 이 환경 사정이라 README·DECISIONS 에 적지 않는다
 4. DECISIONS · STATUS · VERIFICATION 의 숫자가 실제 출력 · `git log` 와 맞는지. 표 밖 긴 설명은 지운다
 5. 지어낸 값 · 예시 값 · 쓰지 않는 틀 파일이 결과물에 남아 있지 않은지
 6. 캐시·임시 생성물은 `.gitignore` (지우지 않는다). 제출 결과 파일(보고서 HTML 등)은 무시하지 않고 커밋

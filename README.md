@@ -38,6 +38,7 @@ codex        # 신뢰 확인에서 '신뢰' → /status 로 AGENTS.md · /skills
 | 과제 시작 직후 | `00-setup` (터미널 명령) | |
 | 설치 직후 | `01-start` 과제 요구 표 · 한 메시지로 보낼 질문 5개 | `$interview-requirements` |
 | 실무자 답을 받을 때마다 | `02-interview` 반영 · 다음 질문 3개 이하 | `$interview-requirements` |
+| 구현 중 실무자가 요구를 바꾸면 | `02-interview` 의 요구 변경 블록 → 질문 답은 02 → '다시' 단위부터 04 | `$interview-requirements` |
 | 성공 기준이 숫자로 정해진 뒤 | `03-plan` 단위 3~4개 · 나란히 계약 | `$plan-delegate` |
 | 단위마다 | `04-build` (성공 지표가 목표 미달이면 같은 카드의 조정 블록) | |
 | 파일이 겹치지 않는 단위가 있을 때 | `05-parallel` (터미널 탭 3의 새 codex) | |
@@ -50,7 +51,7 @@ codex        # 신뢰 확인에서 '신뢰' → /status 로 AGENTS.md · /skills
 - 스킬을 못 읽는 판이어도 AGENTS.md 에 흐름·질문 기준·문서 상한·요청 4요소·검증·커밋 기준이 다 들어 있다
 - 커밋은 Codex 가 요청마다 실행 확인 뒤 스스로 한다(무엇을·왜 한 줄). 나란히 맡긴 대화는 자기 파일만 `git add` 해서 커밋한다
 - 문서 상한: AGREEMENT 80줄 · STATUS 40줄 · VERIFICATION 40줄 · DECISIONS 는 표 한 줄씩. 요청마다 다시 읽는 문서라 길면 토큰이 늘어난다
-- 서버는 사람이 다른 터미널 탭에서 띄우고 그 탭을 닫지 않는다
+- 서버는 사람이 다른 터미널 탭에서 띄우고 그 탭을 닫지 않는다. Codex 의 서버 검사는 `python3 verify.py` 한 명령 · PORT=0 이라 겹치지 않는다
 
 ## 들어 있는 것
 
@@ -78,6 +79,8 @@ codex        # 신뢰 확인에서 '신뢰' → /status 로 AGENTS.md · /skills
 - 지우기(`rm`)가 막힐 수 있다. 캐시·임시 생성물은 지우지 말고 `.gitignore` 로 뺀다
 - 깨끗한 상태 확인은 `d=$(mktemp -d)/c && git clone -q . "$d" && cd "$d"` 에서. 작업 폴더 안에 복사본·worktree 를 만들지 않는다
 - 정적 HTML 미리보기: `python3 -m http.server 8000 --bind 0.0.0.0`
+- Codex 샌드박스는 인터넷 소켓(서버 띄우기·curl)을 막아 서버 검사마다 승인 창이 뜬다. 검사를 `python3 verify.py <이름>` 한 명령에 모으면 첫 창에서 p 한 번으로 끝난다
+- codex 0.166 의 `/new` 는 '어디서 실행' 창을 먼저 띄운다. 1(Use current Git worktree)을 고른 뒤 붙인다
 
 ## 로컬에서 연습할 때
 - 윈도우에서 codex 셸이 `CryptUnprotectData failed` 로 실패하면 `-c 'windows.sandbox="unelevated"'` 를 붙인다

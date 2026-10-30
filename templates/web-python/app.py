@@ -1,6 +1,6 @@
 """최소 웹 서비스 틀 (표준 라이브러리만, 설치 없음).
 
-실행: python3 app.py · 주소 0.0.0.0:8000 (PORT 환경변수로 바꿈) · 미리보기 PORT 8000, URL /
+실행: python3 app.py · 주소 0.0.0.0:8000 (PORT 환경변수로 바꿈, 검사는 PORT=0 이면 빈 포트 번호를 찍는다) · 미리보기 PORT 8000, URL /
 API 더하기: 함수 (query, body) -> dict|list 를 만들고 ROUTES 에 '/api/이름' 으로 넣는다
 화면: static/ 아래 파일. 캐시를 끄므로 고친 뒤 미리보기 새로고침만 하면 된다
 """
@@ -66,5 +66,6 @@ class Handler(SimpleHTTPRequestHandler):
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", "8000"))
-    print(f"serving on 0.0.0.0:{port}", flush=True)
-    ThreadingHTTPServer(("0.0.0.0", port), Handler).serve_forever()
+    server = ThreadingHTTPServer(("0.0.0.0", port), Handler)
+    print(f"serving on 0.0.0.0:{server.server_address[1]}", flush=True)
+    server.serve_forever()

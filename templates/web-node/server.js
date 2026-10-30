@@ -1,5 +1,5 @@
 // 최소 웹 서비스 틀 (Node 내장 모듈만, 설치 없음)
-// 실행: node server.js · 주소 0.0.0.0:3000 (PORT 환경변수로 바꿈) · 미리보기 PORT 3000, URL /
+// 실행: node server.js · 주소 0.0.0.0:3000 (PORT 환경변수로 바꿈, 검사는 PORT=0 이면 빈 포트 번호를 찍는다) · 미리보기 PORT 3000, URL /
 // API 더하기: (query, body) => 객체 를 만들어 ROUTES 에 '/api/이름' 으로 넣는다
 // 화면: public/ 아래 파일. 캐시를 끄므로 고친 뒤 미리보기 새로고침만 하면 된다
 const http = require('http');
@@ -47,4 +47,4 @@ const server = http.createServer((req, res) => {
   });
 });
 
-server.listen(PORT, '0.0.0.0', () => console.log(`serving on 0.0.0.0:${PORT}`));
+server.listen(PORT, '0.0.0.0', () => console.log(`serving on 0.0.0.0:${server.address().port}`));

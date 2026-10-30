@@ -1,7 +1,7 @@
 # 03 계획 · 성공 기준이 숫자로 정해진 뒤
 
 ```
-$plan-delegate 목표: docs/AGREEMENT.md 기준으로 단위 3~4개 계획을 docs/STATUS.md 에 적어. 남은 (추정)은 정해서 docs/DECISIONS.md 표에 한 줄씩, AGREEMENT 상태는 '확정'.
+$plan-delegate 목표: docs/AGREEMENT.md 기준으로 단위 3~4개 계획을 docs/STATUS.md 에 적어. 남은 계산 세부 (추정)은 정해서 docs/DECISIONS.md 표에 한 줄씩, AGREEMENT 상태는 '확정'. 결과 숫자를 바꾸는 업무 규칙·제약 값이 아직 안 물은 (추정)이면 정하지 말고 질문 3개 이하만 답에 적고 멈춰.
 맥락: 남은 시간 <분>분, 제출물 <형식>. 제약: 시간은 일 크기대로(남은 시간을 채우지 마), 새 파일은 꼭 필요한 것만, 틀은 .agents/kit/templates/ 에서 복사, 성공 지표 계산 단위는 꼭, 보조 기능은 뒤로. 코드·HANDOFF 는 아직.
 완료: 단위마다 파일·완료 조건(명령 → 기대), 나란히 단위 표시와 계약 10줄 이내, STATUS 40줄 이하가 되면 커밋하고 계획을 5줄로 요약해.
 ```
