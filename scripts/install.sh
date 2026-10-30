@@ -2,7 +2,7 @@
 # 작업 공간에 작업 원칙·스킬·문서 틀·프롬프트 카드·틀을 넣는다. 이미 있는 파일은 덮어쓰지 않는다.
 # 사용: bash <kit>/scripts/install.sh [작업 폴더]
 # 사람이 터미널에서 돌린다 (Codex 의 기본 권한으로는 .agents · .git 에 쓸 수 없다). 설치 뒤 codex 를 새로 시작한다.
-# git: 저장소가 아니면 git init 뒤 과제 파일을 첫 커밋으로, 설치한 파일을 두 번째 커밋으로 남긴다. 끄기: KIT_NO_GIT=1
+# git: 저장소가 아니면 git init 뒤 과제 파일을 첫 커밋으로, 설치한 파일을 두 번째 커밋으로 남긴다. git 이름이 없으면 이 저장소에만 넣는다. 끄기: KIT_NO_GIT=1
 set -e
 KIT="$(cd "$(dirname "$0")/.." && pwd)"
 DEST="${1:-$PWD}"
@@ -10,8 +10,12 @@ cd "$DEST"
 
 GIT=""; FIRSTFAIL=""
 if [ -z "$KIT_NO_GIT" ] && command -v git >/dev/null 2>&1; then
-  if ! git rev-parse --git-dir >/dev/null 2>&1; then
-    git init -q && echo "git init 했습니다."
+  NEWREPO=""; git rev-parse --git-dir >/dev/null 2>&1 || { git init -q && echo "git init 했습니다."; NEWREPO=1; }
+  # git 이름이 없으면 이 저장소에만 넣는다 (없으면 설치 커밋과 Codex 커밋이 모두 실패한다)
+  ID=""; git config user.name >/dev/null 2>&1 || { git config user.name "응시자"; ID=1; }
+  git config user.email >/dev/null 2>&1 || { git config user.email "candidate@localhost"; ID=1; }
+  [ -n "$ID" ] && echo "git 이름이 없어 이 저장소에만 '응시자'로 넣었습니다."
+  if [ -n "$NEWREPO" ]; then
     # 50MB 넘는 제공 파일은 커밋에서 뺀다 (설치가 느려지고 디스크를 두 배로 쓰지 않게)
     big=$(find . -path ./.git -prune -o -type f -size +50M -print 2>/dev/null | sed 's|^\./|/|')
     if [ -n "$big" ]; then
@@ -19,7 +23,7 @@ if [ -z "$KIT_NO_GIT" ] && command -v git >/dev/null 2>&1; then
       echo "50MB 넘는 파일 $(printf '%s\n' "$big" | wc -l | tr -d ' ')개는 커밋에서 뺐습니다 (.git/info/exclude)."
     fi
     git add -A
-    git diff --cached --quiet || git commit -qm "과제 제공 파일" || { FIRSTFAIL=1; echo "첫 커밋 실패 (git 이름 없음?). 아래 안내대로 이름을 넣고 커밋합니다."; }
+    git diff --cached --quiet || git commit -qm "과제 제공 파일" || { FIRSTFAIL=1; echo "첫 커밋 실패. 아래 안내대로 커밋합니다."; }
   fi
   GIT=1
 fi
@@ -104,6 +108,6 @@ f=AGENTS.md; [ -e AGENTS.override.md ] && f=AGENTS.override.md
 echo
 echo "설치 끝: $f · .agents/skills ($(ls .agents/skills | tr '\n' ' ')) · docs/*.md · .agents/kit"
 echo "다음: codex → 신뢰 확인에서 '신뢰' → /status · /skills 확인 → 카드 01 붙이기"
-echo "  커밋은 Codex 가 요청마다 스스로 한다. git commit 승인 창이 뜨면 바로 승인('다시 묻지 않기'가 있으면 그것)."
+echo "  커밋은 Codex 가 요청마다 스스로 한다. 첫 커밋 때 승인 창이 git add · git commit 차례로 두 번 뜬다 → 둘 다 '다시 묻지 않기'(p)."
 [ -e AGENTS.override.md ] && echo "  /status 의 AGENTS 목록에 AGENTS.override.md 가 없으면 첫 요청 맨 앞에 \$kit-rules 를 붙입니다."
 echo "카드: .agents/kit/CARDS.md (에디터로 열어 두고 복사, 탐색기에 안 보이면 Ctrl+P 로 CARDS.md) · 스킬은 \$이름 으로 부른다 (\$interview-requirements · \$plan-delegate · \$verify-submit · \$handoff)"
