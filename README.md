@@ -13,9 +13,10 @@ codex        # 신뢰 확인에서 '신뢰' → /status 로 AGENTS.md · /skills
 ```
 
 - 설치가 git 도 맡는다: 저장소가 아니면 `git init` 뒤 과제 파일을 '과제 제공 파일'로, 새로 넣은 파일만 '공개 작업 도구 설치'로 커밋한다 (끄기 `KIT_NO_GIT=1`). git 이름이 없으면 넣는 명령을 안내한다
-- clone 이 막히면: `mkdir -p /tmp/kit && curl -sL https://codeload.github.com/unikaive730/ai-coding-task-kit/tar.gz/main | tar xz -C /tmp/kit --strip-components=1 && bash /tmp/kit/scripts/install.sh`
+- `git` 명령이 없을 때만: `mkdir -p /tmp/kit && curl -sL https://codeload.github.com/unikaive730/ai-coding-task-kit/tar.gz/main | tar xz -C /tmp/kit --strip-components=1 && bash /tmp/kit/scripts/install.sh`
+- 접속이 차단돼 안 되면 다른 경로를 찾지 않는다. 플랫폼의 '문제 신고'를 하고 아래 '설치가 아예 안 될 때'로 진행한다
 - 설치는 사람이 한다. Codex 기본 권한(workspace-write)에서는 `.agents` · `.git` 이 읽기 전용이라 승인 창이 뜬다
-- 이미 있는 파일은 덮어쓰지 않는다. 과제에 AGENTS.md 가 있으면 그대로 두고 `AGENTS.override.md` 에 과제 지침 + 작업 원칙을 합친다 (합쳐서 30KB 가 넘으면 스킬 `kit-rules` 만 넣고 첫 요청에 `$kit-rules` 를 붙이라고 안내)
+- 이미 있는 파일은 덮어쓰지 않는다. 과제에 AGENTS.md 가 있으면 그대로 두고 `AGENTS.override.md` 에 과제 지침 + 작업 원칙을 합친다 (합쳐서 30KB 가 넘으면 스킬 `kit-rules` 만 넣고 첫 요청에 `$kit-rules` 를 붙이라고 안내). `/status` 의 AGENTS 목록에 AGENTS.override.md 가 없는 판이면 첫 요청 맨 앞에 `$kit-rules` 를 붙인다
 - 신뢰하지 않은 폴더에서는 AGENTS.md 를 읽지 않는 판이 있다. 신뢰 확인에서 '신뢰'를 고른다
 - `/skills` 또는 `$` 로 스킬 4개(handoff · interview-requirements · plan-delegate · verify-submit)를 확인한다. 안 보이면 `mkdir -p .codex && mv .agents/skills .codex/skills` 후 codex 를 새로 시작한다. 두 곳에 같이 두면 같은 스킬이 두 번 뜬다
 - 설치가 끝나면 `docs/ENV.md`(파이썬·노드·패키지·바깥 접속) 와 `docs/DATA_PROFILE.md`(CSV·XLSX 점검과 '확인할 것') 가 생긴다
@@ -30,7 +31,7 @@ codex        # 신뢰 확인에서 '신뢰' → /status 로 AGENTS.md · /skills
 
 ## 쓰는 법
 
-카드 파일 `.agents/kit/CARDS.md` 를 에디터에 열어 두고, 코드 블록 안만 복사해 `<...>` 를 채워 codex 에 붙인다. 카드는 모두 요청 4요소(목표 · 맥락 · 제약 · 완료 조건)로 되어 있다.
+카드 파일 `.agents/kit/CARDS.md` 를 에디터에 열어 두고, 코드 블록 안만 복사해 `<...>` 를 채워 codex 에 붙인다. 탐색기에 `.agents` 가 안 보이면 Ctrl+P 로 `CARDS.md` 를 찾거나 터미널에서 `cat .agents/kit/CARDS.md` 로 보고 복사한다. 카드는 모두 요청 4요소(목표 · 맥락 · 제약 · 완료 조건)로 되어 있다.
 
 | 언제 | 카드 | 스킬 |
 |---|---|---|

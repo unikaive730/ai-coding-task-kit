@@ -24,6 +24,7 @@ const server = http.createServer((req, res) => {
   const fn = ROUTES[url.pathname];
   if (fn) {
     let raw = '';
+    req.setEncoding('utf8'); // 여러 조각에 걸친 한글이 깨지지 않게
     req.on('data', (c) => { raw += c; });
     req.on('end', async () => {
       try {

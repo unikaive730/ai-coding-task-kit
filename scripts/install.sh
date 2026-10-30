@@ -8,12 +8,18 @@ KIT="$(cd "$(dirname "$0")/.." && pwd)"
 DEST="${1:-$PWD}"
 cd "$DEST"
 
-GIT=""
+GIT=""; FIRSTFAIL=""
 if [ -z "$KIT_NO_GIT" ] && command -v git >/dev/null 2>&1; then
   if ! git rev-parse --git-dir >/dev/null 2>&1; then
     git init -q && echo "git init 했습니다."
+    # 50MB 넘는 제공 파일은 커밋에서 뺀다 (설치가 느려지고 디스크를 두 배로 쓰지 않게)
+    big=$(find . -path ./.git -prune -o -type f -size +50M -print 2>/dev/null | sed 's|^\./|/|')
+    if [ -n "$big" ]; then
+      printf '%s\n' "$big" >> .git/info/exclude
+      echo "50MB 넘는 파일 $(printf '%s\n' "$big" | wc -l | tr -d ' ')개는 커밋에서 뺐습니다 (.git/info/exclude)."
+    fi
     git add -A
-    git diff --cached --quiet || git commit -qm "과제 제공 파일" || echo "첫 커밋 실패 (git 이름 없음?). 아래 안내대로 이름을 넣고 커밋합니다."
+    git diff --cached --quiet || git commit -qm "과제 제공 파일" || { FIRSTFAIL=1; echo "첫 커밋 실패 (git 이름 없음?). 아래 안내대로 이름을 넣고 커밋합니다."; }
   fi
   GIT=1
 fi
@@ -85,7 +91,8 @@ if [ -n "$GIT" ]; then
   grep -qx '__pycache__/' "$ex" 2>/dev/null || printf '%s\n' '__pycache__/' '*.pyc' >> "$ex"
   if [ ${#NEW[@]} -gt 0 ] && git add -- "${NEW[@]}" 2>/dev/null && ! git diff --cached --quiet -- "${NEW[@]}"; then
     if git commit -qm "공개 작업 도구 설치 (ai-coding-task-kit)" -- "${NEW[@]}"; then echo "커밋: 공개 작업 도구 설치 (새로 넣은 ${#NEW[@]}개만)"
-    else echo "커밋 실패: git config user.name \"<이름>\" && git config user.email \"<메일>\" 뒤 git commit -qm \"공개 작업 도구 설치\""; fi
+    else msg="공개 작업 도구 설치"; [ -n "$FIRSTFAIL" ] && msg="과제 제공 파일 + 공개 작업 도구 설치"
+      echo "커밋 실패: git config user.name \"<이름>\" && git config user.email \"<메일>\" 뒤 git commit -qm \"$msg\""; fi
   fi
 fi
 
@@ -96,4 +103,5 @@ f=AGENTS.md; [ -e AGENTS.override.md ] && f=AGENTS.override.md
 echo
 echo "설치 끝: $f · .agents/skills ($(ls .agents/skills | tr '\n' ' ')) · docs/*.md · .agents/kit"
 echo "다음: codex → 신뢰 확인에서 '신뢰' → /status · /skills 확인"
-echo "카드: .agents/kit/CARDS.md (에디터로 열어 두고 복사) · 스킬은 \$이름 으로 부른다 (\$interview-requirements · \$plan-delegate · \$verify-submit · \$handoff)"
+[ -e AGENTS.override.md ] && echo "  /status 의 AGENTS 목록에 AGENTS.override.md 가 없으면 첫 요청 맨 앞에 \$kit-rules 를 붙입니다."
+echo "카드: .agents/kit/CARDS.md (에디터로 열어 두고 복사, 탐색기에 안 보이면 Ctrl+P 로 CARDS.md) · 스킬은 \$이름 으로 부른다 (\$interview-requirements · \$plan-delegate · \$verify-submit · \$handoff)"

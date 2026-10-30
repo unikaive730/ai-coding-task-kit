@@ -55,7 +55,7 @@ class Handler(SimpleHTTPRequestHandler):
 
     def do_POST(self):
         n = int(self.headers.get("Content-Length") or 0)
-        text = self.rfile.read(n).decode("utf-8") if n else ""
+        text = self.rfile.read(n).decode("utf-8", errors="replace") if n else ""
         try:
             body = json.loads(text) if text else None
         except json.JSONDecodeError:
