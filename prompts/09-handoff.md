@@ -4,7 +4,7 @@
 $handoff 목표: 지금 상태로 docs/HANDOFF.md 를 써서(30줄 안) 커밋하고 '넘김 준비 끝'이라고만 답해.
 ```
 
-`/new` → '어디서 실행' 창에서 1(Use current Git worktree) → 빈 입력 칸이 보인 뒤 붙인다(2 는 고르지 않는다).
+`/new` → '어디서 실행' 창이 뜨면 1(Use current Git worktree) → 빈 입력 칸이 보인 뒤 붙인다(2 는 고르지 않는다).
 
 ```
 docs/HANDOFF.md 를 읽고 '다음 한 걸음'부터 이어서 진행해. 시작 전에 읽은 내용을 세 줄로 요약해.

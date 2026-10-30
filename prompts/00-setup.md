@@ -7,4 +7,4 @@ codex
 
 - 신뢰 확인에서 '신뢰' → `/status`(AGENTS 파일 · AGENTS.override.md 를 만들었는데 없으면 첫 요청 맨 앞에 `$kit-rules`) · `/skills`(4개) · 추론 medium
 - 첫 줄(git clone)은 손으로 친다. 그 뒤 복사·붙여넣기: 터미널 붙여넣기는 Ctrl+Shift+V(맥 Cmd+V, Ctrl+V 아님), 복사는 선택 뒤 Ctrl+C · 선택 없이 누른 Ctrl+C 는 실행 중인 codex·서버를 멈춘다
-- 첫 커밋 때 승인 창이 `git add` · `git commit` 차례로 두 번 뜬다 → 둘 다 '다시 묻지 않기'(p, 새 탭도 다시 안 묻는다) · 첫 명령부터 `bwrap: No permissions` 면 승인 창마다 p, 계속되면 '문제 신고' · git 이 없거나 접속이 막히면 README '설치가 아예 안 될 때' · 웹 과제는 첫 서버 검사 때 `python3 verify.py` 승인 창이 한 번 더 뜬다 → p
+- 첫 커밋 때 승인 창이 `git add` · `git commit` 차례로 두 번 뜬다 → 둘 다 '다시 묻지 않기'(p, 새 탭도 다시 안 묻는다) · 첫 명령부터 `bwrap: No permissions` 면 승인 창마다 p, 계속되면 '문제 신고' · git 이 없거나 접속이 막히면 README '설치가 아예 안 될 때' · 웹 과제는 첫 서버 검사 때 `python3 verify.py` 승인 창이 한 번 더 뜬다 → p · 그 밖의 즉석 검사 명령은 y

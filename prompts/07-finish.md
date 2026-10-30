@@ -6,4 +6,4 @@ $verify-submit 목표: 문서·제출 점검을 한 번에 해. README(실행 �
 완료: 커밋 뒤 git status --short 가 비면 끝. 답은 점검 결과 5줄 이내 + 후속 질문 대비 요약 5줄.
 ```
 
-- 요청이 8번을 넘었으면 `/new` → '어디서 실행'(Where should the new conversation run?) 창에서 1(Use current Git worktree) → 빈 입력 칸이 보인 뒤 붙인다(2 는 다른 폴더 복사본이라 커밋이 거기 쌓인다. HANDOFF 없이 docs·git log 로 충분) · 5줄 요약은 사람이 직접 읽는다. 후속 서술형은 AI 없이 직접 쓴다
+- 요청이 8번을 넘었으면 `/new` → '어디서 실행'(Where should the new conversation run?) 창이 뜨면 1(Use current Git worktree) → 빈 입력 칸이 보인 뒤 붙인다(2 는 다른 폴더 복사본이라 커밋이 거기 쌓인다. HANDOFF 없이 docs·git log 로 충분) · 5줄 요약은 사람이 직접 읽는다. 후속 서술형은 AI 없이 직접 쓴다
