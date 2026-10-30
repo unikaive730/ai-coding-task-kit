@@ -6,3 +6,4 @@
 ## 참고·차용한 외부 자료
 | 자료 | 어디에 썼나 |
 |---|---|
+| github.com/unikaive730/ai-coding-task-kit (공개, MIT) | 작업 원칙·문서 틀·데이터 점검 도구 |
