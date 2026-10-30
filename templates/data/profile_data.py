@@ -2,8 +2,10 @@
 
 실행: python3 profile_data.py <파일> [<파일> ...] [--by 열[,열]] [--max-rows 500000]
 출력: 행·열 · 완전 중복 행 · 열마다 형식·빈 칸·값 종류 · 숫자 범위 · 확인할 것(질문 후보)
-확인할 것: 표기만 다른 값(Etch01·ETCH-01) · 시간대·날짜 형식 섞임 · 단위 섞임 · 숫자 열 속 글자 · 극단값
+확인할 것: 표기만 다른 값(Etch01·ETCH-01·degC=C) · 줄임 표기(L1·line-1) · 시간대·날짜 형식 섞임(일/월/연 포함)
+           · 단위 섞임 · 빈 칸 · 숫자 열 속 글자 · 극단값
 --by 열[,열]: 그 열 값마다 숫자 열의 최소·평균·최대 (예: --by equipment,sensor 로 설비·센서별 단위 차이 찾기)
+           --by 가 없고 200행 이상이면 값 종류 2~12개인 글자 열(두 열이면 종류 곱 24 이하)로 자동으로 묶는다
 큰 파일도 한 줄씩 읽는다. 값 종류는 열마다 2만 개까지만 센다.
 """
 import csv
@@ -17,14 +19,21 @@ from xml.etree import ElementTree as ET
 NULLS = {"", "na", "n/a", "nan", "null", "none", "-", "--", "?", "없음", "#n/a"}
 NUM_RE = re.compile(r"^[+-]?(\d{1,3}(,\d{3})+|\d+)(\.\d+)?([eE][+-]?\d+)?$|^[+-]?\.\d+$")
 UNIT_RE = re.compile(r"^[+-]?\d[\d,]*(\.\d+)?\s*([A-Za-z%°µ/가-힣]+[A-Za-z0-9%°/]*)$")
-DATE_RE = re.compile(r"^\d{4}[-/.]\d{1,2}[-/.]\d{1,2}([ T]\d{1,2}:\d{2}(:\d{2})?(\.\d+)?)?(Z|[+-]\d{2}:?\d{2})?$")
+DATE_RE = re.compile(r"^(\d{4}[-/.]\d{1,2}[-/.]\d{1,2}|\d{1,2}[-/.]\d{1,2}[-/.]\d{4})([ T]\d{1,2}:\d{2}(:\d{2})?(\.\d+)?)?(Z|[+-]\d{2}:?\d{2})?$")
 TZ_RE = re.compile(r"(Z|[+-]\d{2}:?\d{2})$")
+DMY_RE = re.compile(r"^(\d{1,2})[-/.](\d{1,2})[-/.]\d{4}")
 KEEP = 20000
 TAB = chr(9)
 
 
 def norm(v):
+    v = re.sub(r"(?i)^deg(?=[cf]$)", "", v)
     return re.sub(r"[\s\-_.·°/]+", "", v).casefold()
+
+
+def abbr_of(short, long):  # short 의 글자가 long 안에 차례대로 있나 (l · line)
+    it = iter(long)
+    return all(ch in it for ch in short)
 
 
 def to_num(v):
@@ -101,6 +110,7 @@ class Col:
         self.mean = self.m2 = 0.0
         self.lo, self.hi = math.inf, -math.inf
         self.units, self.shapes, self.tz, self.text_in_num = Counter(), Counter(), Counter(), Counter()
+        self.dmy = [0, 0, 0]  # 연도가 끝에 오는 날짜: 앞자리 최대 · 둘째 최대 · 개수
 
     def add(self, v):
         self.n += 1
@@ -127,6 +137,10 @@ class Col:
             self.shapes[re.sub(r"\d", "9", s)] += 1
             z = TZ_RE.search(s[10:])
             self.tz[z.group(1) if z else "없음"] += 1
+            m = DMY_RE.match(s)
+            if m:
+                a, b = int(m.group(1)), int(m.group(2))
+                self.dmy = [max(self.dmy[0], a), max(self.dmy[1], b), self.dmy[2] + 1]
             return
         u = UNIT_RE.match(s)
         if u:
@@ -149,12 +163,25 @@ def fmt(x):
     return f"{x:.4g}" if abs(x) < 1e6 else f"{x:.3e}"
 
 
-def profile(path, by=None, max_rows=500000):
+def open_table(path, max_rows):
     if path.lower().endswith((".xlsx", ".xlsm")):
         enc, header, rows = read_xlsx(path, max_rows)
     else:
         enc, header, rows = read_csv(path)
-    header = [h.strip() or f"열{i + 1}" for i, h in enumerate(header)]
+    return enc, [h.strip() or f"열{i + 1}" for i, h in enumerate(header)], rows
+
+
+def add_group(stat, r, keys, header):
+    g = " · ".join(r[k].strip() if k < len(r) else "" for k in keys)
+    for i, v in enumerate(r[: len(header)]):
+        x = None if i in keys else to_num(v.strip())
+        if x is not None:
+            st = stat[(g, header[i])]
+            st[0], st[1], st[2], st[3] = min(st[0], x), max(st[1], x), st[2] + x, st[3] + 1
+
+
+def profile(path, by=None, max_rows=500000):
+    enc, header, rows = open_table(path, max_rows)
     cols = [Col() for _ in header]
     keys = [header.index(k) for k in (by or "").split(",") if k in header]
     stat = defaultdict(lambda: [math.inf, -math.inf, 0.0, 0])
@@ -173,12 +200,7 @@ def profile(path, by=None, max_rows=500000):
         for i, c in enumerate(cols):
             c.add(r[i] if i < len(r) else "")
         if keys:
-            g = " · ".join(r[k].strip() if k < len(r) else "" for k in keys)
-            for i, v in enumerate(r[: len(header)]):
-                x = None if i in keys else to_num(v.strip())
-                if x is not None:
-                    st = stat[(g, header[i])]
-                    st[0], st[1], st[2], st[3] = min(st[0], x), max(st[1], x), st[2] + x, st[3] + 1
+            add_group(stat, r, keys, header)
     print(f"\n## {path}")
     print(f"- 읽기 {enc} · 행 {n}{' (앞부분만, --max-rows)' if n >= max_rows else ''} · 열 {len(header)}"
           f" · 완전 중복 행 {dup}" + (f" · 열 수가 다른 행 {width_bad}" if width_bad else ""))
@@ -194,7 +216,8 @@ def profile(path, by=None, max_rows=500000):
             if c.text_in_num:
                 checks.append(f"{name}: 숫자 열에 글자 값 {list(c.text_in_num)[:4]}")
         else:
-            desc = " · ".join(f"{v[:24]}({cnt})" for v, cnt in c.vals.most_common(8 if kinds <= 8 else 5))
+            top = kinds if k == "글자" and kinds <= 20 else (8 if kinds <= 8 else 5)
+            desc = " · ".join(f"{v[:24]}({cnt})" for v, cnt in c.vals.most_common(top))
         empty = f"{c.empty}" + (f" (표기 {dict(c.null_words.most_common(3))})" if c.null_words else "")
         print(f"| {name} | {k} | {empty} | {kinds}{'+' if c.overflow else ''} | {desc} |")
         if k != "숫자" and 1 < kinds <= 2000:
@@ -205,20 +228,55 @@ def profile(path, by=None, max_rows=500000):
             if same:
                 shown = " / ".join("=".join(g[:4]) for g in same[:5])
                 checks.append(f"{name}: 표기만 다른 값 {len(same)}묶음 ({shown}) · 같은 대상인지")
+            near = defaultdict(dict)  # 숫자가 같고 글자가 줄임말 관계인 값 (L1 · line-1)
+            for v in c.vals:
+                d = re.sub(r"\D", "", v).lstrip("0")
+                if d and len(v) <= 12:
+                    near[(v[:1].casefold(), d)].setdefault(norm(v), v)
+            pairs = []
+            for g in near.values():
+                ks = sorted(g, key=len)
+                al = [re.sub(r"[^a-z]", "", k) for k in ks]
+                hit = [g[k] for k, a in zip(ks, al) if abbr_of(al[0], a)]
+                if len(hit) > 1:
+                    pairs.append(hit)
+            if pairs:
+                checks.append(f"{name}: 줄임 표기 {len(pairs)}묶음 ({' / '.join('='.join(h[:4]) for h in pairs[:5])}) · 같은 대상인지")
             if kinds <= 12 and re.search(r"unit|단위", name, re.I):
                 checks.append(f"{name}: 단위 {kinds}가지 {list(c.vals)} · 환산이 필요한지, 언제부터 바뀌었는지")
+        if c.empty and n >= 50:  # 작은 표는 에이전트가 직접 읽는다
+            checks.append(f"{name}: 빈 칸 {c.empty}개 · 빈 칸의 뜻(미완료·끊김·0)과 계산에 넣을지")
         if len(c.shapes) > 1:
             checks.append(f"{name}: 날짜 형식 {len(c.shapes)}가지 {dict(c.shapes.most_common(3))}")
+        if c.dmy[2]:
+            a, b = c.dmy[0], c.dmy[1]
+            order = "일/월/연(앞자리가 12 초과)" if a > 12 else "월/일/연(둘째가 12 초과)" if b > 12 else "일/월인지 월/일인지 모름(둘 다 12 이하)"
+            checks.append(f"{name}: 연도가 끝에 오는 날짜 {c.dmy[2]}개 · {order} · 앞뒤 행으로 정할 것")
         if len(c.tz) > 1:
             checks.append(f"{name}: 시간대 표기 섞임 {dict(c.tz)} · 표기 없는 값은 어느 시간대인지")
         if len(c.units) > 1:
             checks.append(f"{name}: 값 속 단위 섞임 {dict(c.units.most_common(6))} · 바뀐 시점·환산 기준")
-    if keys:
-        print(f"\n| {by} | 숫자 열 | 최소 | 평균 | 최대 | 개수 |\n|---|---|---|---|---|---|")
-        for (g, name), st in sorted(stat.items())[:80]:
-            print(f"| {g} | {name} | {fmt(st[0])} | {fmt(st[2] / st[3])} | {fmt(st[1])} | {st[3]} |")
-    elif by:
+    if by and not keys:
         print(f"\n- --by {by}: 열을 찾지 못함 (열: {', '.join(header)})")
+    limit, label = 80, by
+    if not by and n >= 200 and any(c.kind() == "숫자" for c in cols):
+        cand = [i for i, c in enumerate(cols) if c.kind() == "글자" and 2 <= len(c.vals) <= 12 and not c.overflow]
+        kv = lambda ks: math.prod(len(cols[i].vals) for i in ks)  # noqa: E731
+        opts = [[i, j] for i in cand for j in cand if i < j and kv([i, j]) <= 24] or [[i] for i in cand]
+        keys = max(opts, key=kv) if opts else []
+        if keys:
+            limit, label = 24, ",".join(header[i] for i in keys) + " (자동)"
+            _, _, rows2 = open_table(path, max_rows)
+            for j, r in enumerate(rows2):
+                if j >= max_rows:
+                    break
+                add_group(stat, r, keys, header)
+    if keys and stat:
+        print(f"\n| {label} | 숫자 열 | 최소 | 평균 | 최대 | 개수 |\n|---|---|---|---|---|---|")
+        for (g, name), st in sorted(stat.items())[:limit]:
+            print(f"| {g} | {name} | {fmt(st[0])} | {fmt(st[2] / st[3])} | {fmt(st[1])} | {st[3]} |")
+        if len(stat) > limit:
+            print(f"- 묶음 {len(stat)}줄 중 앞 {limit}줄 · 좁히려면 --by 열")
     print("\n### 확인할 것 (실무자 질문 후보)")
     for ch in checks or ["눈에 띄는 것 없음 · 빈 칸의 뜻과 기간 경계는 따로 확인"]:
         print(f"- {ch}")

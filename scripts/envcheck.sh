@@ -16,7 +16,7 @@ net() { command -v curl >/dev/null 2>&1 || { echo "curl 없음"; return; }
   echo "| python | $( [ -n "$PY" ] && "$PY" --version 2>&1 || echo 없음) ($PY) |"
   echo "| pip | $( [ -n "$PY" ] && "$PY" -m pip --version 2>/dev/null | cut -d' ' -f1-2 || echo 없음) |"
   echo "| node · npm | $(ver node --version) · $(ver npm --version) |"
-  echo "| git | $(ver git --version) |"
+  echo "| git · rg | $(ver git --version) · $(command -v rg >/dev/null 2>&1 && echo 있음 || echo '없음(grep -rn)') |"
   echo "| codex | $(ver codex --version) |"
   if [ -n "$PY" ]; then
     mods=$(PYTHONIOENCODING=utf-8 "$PY" - <<'PYEOF' 2>/dev/null
@@ -42,6 +42,7 @@ PYEOF
   echo "| 디스크(이 폴더) | $(df -h . 2>/dev/null | awk 'NR==2{print $4" 남음 / "$2}') |"
   echo
   echo "- 패키지가 '없음'이고 pypi 접속이 '안 됨'이면 표준 라이브러리로 만든다"
+  echo "- 실행 명령은 ${PY:-python3} 로 쓴다 (README 에도 그대로)"
 } > "$out"
 echo "환경 점검: $out"
 sed -n '5,20p' "$out" | cut -c1-160
