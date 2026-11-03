@@ -18,7 +18,7 @@ codex        # 신뢰 확인에서 '신뢰' → /status 로 AGENTS.md · /skills
 - 설치는 사람이 한다. Codex 기본 권한(workspace-write)에서는 `.agents` · `.git` 이 읽기 전용이라 승인 창이 뜬다. 그 뒤 Codex 는 커밋을 `bash .agents/kit/commit.sh` 한 명령으로 한다(메시지·파일 목록은 `.commit-msg`·`.commit-files`, git 에서 빠져 있다). 첫 커밋 승인 창에서 '다시 묻지 않기'(p) 한 번이면 끝까지 안 뜬다(탭 2 는 `commit.sh 2` 에서 한 번 더). 늘 같은 명령이라 커밋 메시지가 바뀌어도 다시 묻지 않는다
 - 이미 있는 파일은 덮어쓰지 않는다. 과제에 AGENTS.md 가 있으면 그대로 두고 `AGENTS.override.md` 에 과제 지침 + 작업 원칙을 합친다 (합쳐서 30KB 가 넘으면 스킬 `kit-rules` 만 넣고 첫 요청에 `$kit-rules` 를 붙이라고 안내). `/status` 의 AGENTS 목록에 AGENTS.override.md 가 없는 판이면 첫 요청 맨 앞에 `$kit-rules` 를 붙인다
 - 신뢰하지 않은 폴더에서는 AGENTS.md 를 읽지 않는 판이 있다. 신뢰 확인에서 '신뢰'를 고른다
-- `/skills` 또는 `$` 로 스킬 4개(handoff · interview-requirements · plan-delegate · verify-submit)를 확인한다. 안 보이면 `mkdir -p .codex && mv .agents/skills .codex/skills` 후 codex 를 새로 시작한다. 두 곳에 같이 두면 같은 스킬이 두 번 뜬다
+- `/skills` 또는 `$` 로 스킬 4개(handoff · interview-requirements · plan-delegate · verify-submit)를 확인한다. 안 보이면 먼저 플랫폼 도움말에 '이 환경의 Skill 적용 방법'을 한 번 묻고, 그래도 안 되면 `mkdir -p .codex && mv .agents/skills .codex/skills` 후 codex 를 새로 시작한다. `$이름` 이 안 먹으면 `/skills` 목록에서 골라 부른다. 두 곳에 같이 두면 같은 스킬이 두 번 뜬다
 - 설치가 끝나면 `docs/ENV.md`(파이썬·노드·패키지·바깥 접속) 와 `docs/DATA_PROFILE.md`(CSV·XLSX 점검과 '확인할 것') 가 생긴다
 
 ### 설치가 아예 안 될 때 (첫 요청에 직접 친다)
@@ -36,14 +36,14 @@ codex        # 신뢰 확인에서 '신뢰' → /status 로 AGENTS.md · /skills
 | 언제 | 카드 | 스킬 |
 |---|---|---|
 | 과제 시작 직후 | `00-setup` (터미널 명령) | |
-| 설치 직후 | `01-start` 과제 요구 표 · 한 메시지로 보낼 질문 5개 | `$interview-requirements` |
+| 설치 직후 | `01-start` 과제 요구 표 · 질문 5개(첫 메시지 2~3개) | `$interview-requirements` |
 | 실무자 답을 받을 때마다 | `02-interview` 반영 · 다음 질문 3개 이하 | `$interview-requirements` |
 | 구현 중 실무자가 요구를 바꾸면 | `02-interview` 의 요구 변경 블록 → 질문 답은 02 → '다시' 단위부터 04 | `$interview-requirements` |
-| 성공 기준이 숫자로 정해진 뒤 | `03-plan` 단위 3~4개 · 나란히 계약 | `$plan-delegate` |
+| 성공 기준이 숫자로 정해진 뒤 | `03-plan` 단위 3~4개 · 나란히 계약 · 실무자 기준 확인 한 메시지 | `$plan-delegate` |
 | 단위마다 | `04-build` (성공 지표가 목표 미달이면 같은 카드의 조정 블록) · 기다리는 동안 `last.sh` | |
-| 계획이 커밋된 뒤 · 단위가 커밋될 때마다 | `05-parallel` 탭 2 검사 레인: 독립 합격 검사 `check_acceptance.py` · 커밋 대조(읽기만) | `$verify-submit` |
+| 계획이 커밋된 뒤 · 대조 2~3번 | `05-parallel` 탭 2 검사 레인: 독립 합격 검사 `check_acceptance.py` · 커밋 대조(읽기만) | `$verify-submit` |
 | 핵심 기능이 돈 뒤 | `06-verify` 연결 · 전체 테스트 · 숫자 대조 | `$verify-submit` |
-| 제출 30분 전 | `07-finish` 문서·제출 점검 한 번에 → 브리핑(파일 없이 25줄) → 10분 직접 읽기 | `$verify-submit` |
+| 화면 남은 30분 | `07-finish` 문서·제출 점검 한 번에 → 브리핑(파일 없이 30줄) → 8분 읽기 · 2분 말해 보기 | `$verify-submit` |
 | 같은 오류가 두 번 날 때 | `08-stuck` | |
 | 압축이 한 번 일어났을 때 | `09-handoff` → `/new` | `$handoff` |
 
@@ -60,11 +60,11 @@ codex        # 신뢰 확인에서 '신뢰' → /status 로 AGENTS.md · /skills
 | 누가 | 기다리는 동안 하는 일 |
 |---|---|
 | 탭 1 codex | 단위 하나 구현 · 커밋 · 5줄 답 |
-| 탭 2 codex | 요구 문서만 보고 만든 합격 검사 · 커밋마다 읽기만 하는 대조 |
-| 사람 | 실무자에게 다음 단위 질문 미리 보내기 · 탭 2 결과 보기 · 다음 카드 채우기 · 궁금하면 `last.sh` |
+| 탭 2 codex | 요구 문서만 보고 만든 합격 검사 · 2~3번 읽기만 하는 대조 |
+| 사람 | 실무자에게 숨은 제약·예외·경계값 질문(시간이 가장 많이 드는 일) · 탭 2 지적을 받아들일지 버릴지 고르기 · 다음 카드 채우기 · `last.sh` 로 숫자 하나 직접 보기 |
 
-- 제출 뒤 '왜 이렇게 했나' 확인 질문이 나오는 과제라면: Codex 는 묻지 않고 정하되 DECISIONS 에 한 줄씩 남기고, 사람은 제출 15분 전 브리핑(결과를 바꾼 결정 전부 · 검증 · 실무자 답이 바꾼 것 · 약한 곳)을 10분 읽어 한 번에 따라잡는다
-- 답 쓰는 틀: 결론 한 문장 → 이유 두 가지(실무자 답·데이터 숫자) → 버린 대안과 이유(검토한 대안이 없었으면 없었다고) → 확인 방법과 숫자 → 한계 한 줄. 질문 전제가 실제와 다르면 첫 줄에 "실제로는 ~로 구현했습니다" · 기록에 없는 이유는 만들지 않고 "기록된 이유는 없습니다. 제 이해로는 ~"
+- 제출 뒤 '왜 이렇게 했나' 확인 질문이 나오는 과제라면: Codex 는 묻지 않고 정하되 DECISIONS 에 한 줄씩 남기고(방법 수준·구조는 버린 대안의 이유까지), 사람은 화면 남은 25분에 브리핑(방법 · 구조와 데이터 흐름 · 결정 전부 · 검증 · 실무자 답이 바꾼 것 · 장애 때 동작 · AI 제안을 거른 사례 · 약한 곳)을 읽어 한 번에 따라잡는다
+- 답 쓰는 틀: 결론 한 문장 → 이유 두 가지(실무자 답·데이터 숫자) → 버린 대안과 이유(검토한 대안이 없었으면 없었다고) → 확인 방법과 숫자 → 약점 · 파급 · 다음 검증. 답마다 파일 이름 하나와 직접 본 숫자 하나. 질문 전제가 실제와 다르면 첫 줄에 "실제로는 ~로 구현했습니다" · 기록에 없는 이유는 만들지 않고 "기록된 이유는 없습니다. 제 이해로는 ~"
 
 ## 들어 있는 것
 
@@ -76,7 +76,7 @@ codex        # 신뢰 확인에서 '신뢰' → /status 로 AGENTS.md · /skills
 | `.agents/skills/verify-submit` | 같음 | 단위 검증 · 제출 점검표 · 브리핑 · 독립 합격 검사 |
 | `.agents/skills/handoff` | 같음 | 넘길 때 · HANDOFF 내용 · 새 채팅 첫 요청 |
 | `prompts/00~09` | `.agents/kit/CARDS.md` (한 파일로 합침) | 단계별 프롬프트 카드 (코드 블록 1~4줄) |
-| `docs-templates/` | `docs/` | AGREEMENT · STATUS · DECISIONS · VERIFICATION · HANDOFF 틀 |
+| `docs-templates/` | `docs/` | AGREEMENT · STATUS · DECISIONS · VERIFICATION 틀 (HANDOFF 는 `$handoff` 때만 만든다) |
 | `scripts/install.sh` | | 설치 (덮어쓰기 없음) · git 첫 커밋 · 환경 점검 · 데이터 점검 |
 | `scripts/last.sh` | `.agents/kit/last.sh` | 지난 커밋 한눈에 보기: 파일 · 새 결정 줄 · 새 검증 줄 · 아직 커밋 안 된 변경 (`bash .agents/kit/last.sh [커밋 수]`) |
 | `scripts/envcheck.sh` | `docs/ENV.md` 를 만든다 | python · node · git · codex 판 · 파이썬 패키지 · pypi/npm/github 접속 · 메모리 |
@@ -95,6 +95,8 @@ codex        # 신뢰 확인에서 '신뢰' → /status 로 AGENTS.md · /skills
 - 정적 HTML 미리보기: `python3 -m http.server 8000 --bind 0.0.0.0`
 - Codex 샌드박스는 인터넷 소켓(서버 띄우기·curl)을 막아 서버 검사마다 승인 창이 뜬다. 검사를 `python3 verify.py <이름>` 한 명령에 모으면 첫 창에서 p 한 번으로 끝난다
 - codex 0.166 의 `/new` 는 '어디서 실행' 창을 먼저 띄운다. 1(Use current Git worktree)을 고른 뒤 붙인다
+- 재접속하면 Codex 대화 기록이 화면에서 사라질 수 있다(작업은 계속 돌았을 수 있다). 결정·숫자는 파일·커밋에 남긴 것만 믿고, 같은 요청을 다시 보내기 전에 `last.sh`·`git log` 로 본다
+- 관리 포트(8090·8081·2222 등)는 피한다 · 시스템 시간대가 UTC 일 수 있다
 
 ## 로컬에서 연습할 때
 - 윈도우에서 codex 셸이 `CryptUnprotectData failed` 로 실패하면 `-c 'windows.sandbox="unelevated"'` 를 붙인다

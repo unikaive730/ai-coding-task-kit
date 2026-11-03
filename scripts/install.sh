@@ -62,9 +62,9 @@ else
 fi
 
 # 2. 스킬 · 문서 틀 · .gitignore (과제에 없을 때만. 캐시 파일을 커밋에서 뺀다, 지우기가 막혀도 섞이지 않게)
-if [ ! -e .gitignore ]; then printf '%s\n' '__pycache__/' '*.pyc' '.pytest_cache/' '.venv/' 'node_modules/' > .gitignore; NEW+=(.gitignore); fi
+if [ ! -e .gitignore ]; then printf '%s\n' '__pycache__/' '*.pyc' '.pytest_cache/' '.venv/' 'node_modules/' '.env' '.env.*' '*.pem' '*.key' > .gitignore; NEW+=(.gitignore); fi
 for d in "$KIT"/.agents/skills/*/; do put "$d" ".agents/skills/$(basename "$d")"; done
-for f in "$KIT"/docs-templates/*.md; do put "$f" "docs/$(basename "$f")"; done
+for f in "$KIT"/docs-templates/*.md; do [ "$(basename "$f")" = HANDOFF.md ] && continue; put "$f" "docs/$(basename "$f")"; done  # HANDOFF 는 \$handoff 때만 (안 쓴 빈 틀을 남기지 않는다)
 
 # 3. 프롬프트 카드(한 파일) · 틀 · 분야 요약
 if [ ! -e .agents/kit/CARDS.md ]; then
