@@ -50,8 +50,8 @@ codex        # 신뢰 확인에서 '신뢰' → /status 로 AGENTS.md · /skills
 - 구현 요청의 답은 칸 이름이 정해진 5줄이다: `바뀐 것` · `숫자` · `정한 것`(DECISIONS 에 쓴 결정 이름 전부) · `확인` · `다음`. 질문·계획·검사·브리핑은 카드가 정한 꼴에 `정한 것:` 한 줄만 붙인다. 기다리는 동안 이것과 `bash .agents/kit/last.sh`(지난 커밋 파일 · 새 결정 줄 · 검증 줄, 토큰 0)로 따라간다
 - 스킬은 `$이름` 으로 부른다. Codex 는 목록의 설명을 보고 SKILL.md 를 한 번 읽는다(대화마다 한 번)
 - 스킬을 못 읽는 판이어도 AGENTS.md 에 흐름·질문 기준·문서 상한·요청 4요소·검증·커밋 기준이 다 들어 있다
-- 커밋은 Codex 가 요청마다 실행 확인 뒤 스스로 한다(무엇을·왜 한 줄). 나란히 맡긴 대화는 자기 파일만 커밋한다(탭 N 은 `.commit-files-N` · `commit.sh N`)
-- 문서 상한: AGREEMENT 80줄 · STATUS 40줄 · VERIFICATION 40줄 · DECISIONS 는 표 한 줄씩. 요청마다 다시 읽는 문서라 길면 토큰이 늘어난다
+- 커밋은 Codex 가 요청마다 실행 확인 뒤 스스로 한다(단위 번호 · 무엇을 · 왜 한 줄). 나란히 맡긴 대화는 자기 파일만 커밋한다(탭 N 은 `.commit-files-N` · `commit.sh N`)
+- 문서 상한: AGREEMENT 80줄 · STATUS 40줄 · VERIFICATION 40줄 · DECISIONS 25줄(표 한 줄씩). 요청마다 다시 읽는 문서라 길면 토큰이 늘어난다
 - 서버는 사람이 다른 터미널 탭에서 띄우고 그 탭을 닫지 않는다. Codex 의 서버 검사는 탭 1 이 `python3 verify.py`, 탭 2 가 `python3 check_acceptance.py` 한 명령 · PORT=0 이라 겹치지 않는다
 
 ## 기다리는 시간과 제출 뒤 확인 질문
