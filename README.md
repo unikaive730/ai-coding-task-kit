@@ -39,7 +39,7 @@ codex        # 신뢰 확인에서 '신뢰' → /status 로 AGENTS.md · /skills
 | 설치 직후 | `01-start` 과제 요구 표 · 질문 목록(한 질문 한 주제, 첫 메시지 2~3개) | `$interview-requirements` |
 | 실무자 답을 받을 때마다 | `02-interview` 반영 · 다음 질문 3개 이하 | `$interview-requirements` |
 | 구현 중 실무자가 요구를 바꾸면 | `02-interview` 의 요구 변경 블록 → 질문 답은 02 → '다시' 단위부터 04 | `$interview-requirements` |
-| 성공 기준이 숫자로 정해진 뒤 | `03-plan` 단위 3~4개 · 나란히 계약 · 실무자 기준 확인 한 메시지 | `$plan-delegate` |
+| 성공 기준이 숫자로 정해진 뒤 | `03-plan` 단위 3~4개 · 나란히 계약 · 실무자 기준 확인 한 메시지 → 계획 커밋 뒤 탭 1 `/new` · 나란히 단위는 탭 5 | `$plan-delegate` |
 | 단위마다 | `04-build` (성공 지표가 목표 미달이면 같은 카드의 조정 블록) · 기다리는 동안 `last.sh` | |
 | 계획이 커밋된 뒤 · 대조 2~3번 | `05-parallel` 탭 2 검사 레인: 독립 합격 검사 `check_acceptance.py` · 커밋 대조(읽기만) | `$verify-submit` |
 | 핵심 기능이 돈 뒤 | `06-verify` 연결 · 전체 테스트 · 숫자 대조 | `$verify-submit` |
