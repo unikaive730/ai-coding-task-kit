@@ -39,19 +39,32 @@ codex        # 신뢰 확인에서 '신뢰' → /status 로 AGENTS.md · /skills
 | 설치 직후 | `01-start` 과제 요구 표 · 한 메시지로 보낼 질문 5개 | `$interview-requirements` |
 | 실무자 답을 받을 때마다 | `02-interview` 반영 · 다음 질문 3개 이하 | `$interview-requirements` |
 | 구현 중 실무자가 요구를 바꾸면 | `02-interview` 의 요구 변경 블록 → 질문 답은 02 → '다시' 단위부터 04 | `$interview-requirements` |
-| 성공 기준이 숫자로 정해진 뒤 | `03-plan` 단위 3~4개 · 나란히 계약 | `$plan-delegate` |
-| 단위마다 | `04-build` (성공 지표가 목표 미달이면 같은 카드의 조정 블록) | |
-| 파일이 겹치지 않는 단위가 있을 때 | `05-parallel` (터미널 탭 3의 새 codex) | |
+| 성공 기준이 숫자로 정해진 뒤 | `03-plan` 단위 3~4개 · 사람이 고를 결정 2~3개 → 결정 블록(이유는 내 말로) | `$plan-delegate` |
+| 단위마다 | `04-build` (성공 지표가 목표 미달이면 같은 카드의 조정 블록) · 기다리는 동안 `last.sh` | |
+| 계획이 커밋된 뒤 · 단위가 커밋될 때마다 | `05-parallel` 탭 2 검사 레인: 독립 합격 검사 `check_acceptance.py` · 커밋 대조(읽기만) | `$verify-submit` |
 | 핵심 기능이 돈 뒤 | `06-verify` 연결 · 전체 테스트 · 숫자 대조 | `$verify-submit` |
-| 제출 30분 전 | `07-finish` 문서·제출 점검 한 번에 · 후속 질문 대비 5줄 | `$verify-submit` |
+| 제출 30분 전 | `07-finish` 문서·제출 점검 한 번에 → 브리핑(파일 없이 20줄) → 10분 직접 읽기 | `$verify-submit` |
 | 같은 오류가 두 번 날 때 | `08-stuck` | |
 | 압축이 한 번 일어났을 때 | `09-handoff` → `/new` | `$handoff` |
 
+- 답은 칸 이름이 정해진 5줄이다: `바뀐 것` · `숫자` · `정한 것`(결정·이유·정한 쪽) · `확인` · `다음`. 기다리는 동안 이것과 `bash .agents/kit/last.sh`(지난 커밋 파일 · 새 결정 줄 · 검증 줄, 토큰 0)로 따라간다
 - 스킬은 `$이름` 으로 부른다. Codex 는 목록의 설명을 보고 SKILL.md 를 한 번 읽는다(대화마다 한 번)
 - 스킬을 못 읽는 판이어도 AGENTS.md 에 흐름·질문 기준·문서 상한·요청 4요소·검증·커밋 기준이 다 들어 있다
 - 커밋은 Codex 가 요청마다 실행 확인 뒤 스스로 한다(무엇을·왜 한 줄). 나란히 맡긴 대화는 자기 파일만 `git add` 해서 커밋한다
 - 문서 상한: AGREEMENT 80줄 · STATUS 40줄 · VERIFICATION 40줄 · DECISIONS 는 표 한 줄씩. 요청마다 다시 읽는 문서라 길면 토큰이 늘어난다
 - 서버는 사람이 다른 터미널 탭에서 띄우고 그 탭을 닫지 않는다. Codex 의 서버 검사는 `python3 verify.py` 한 명령 · PORT=0 이라 겹치지 않는다
+
+## 기다리는 시간과 제출 뒤 확인 질문
+요청 하나에 2~6분을 기다린다. 이 시간에 Codex 를 하나 더 돌려 같은 일을 시키기보다, 아래처럼 나눈다.
+
+| 누가 | 기다리는 동안 하는 일 |
+|---|---|
+| 탭 1 codex | 단위 하나 구현 · 커밋 · 5줄 답 |
+| 탭 2 codex | 요구 문서만 보고 만든 합격 검사 · 커밋마다 읽기만 하는 대조 |
+| 사람 | `last.sh` 로 지난 커밋과 새 결정 줄 읽기 · 실무자에게 다음 단위 질문 미리 보내기 · 모르는 결정은 다음 요청 맨 앞에 `<그것>은 왜?` |
+
+- 제출 뒤 '왜 이렇게 했나' 확인 질문이 나오는 과제라면: 결과를 가르는 선택은 계획 때 사람이 고르고 이유를 자기 말로 친다(DECISIONS '정한 쪽: 사람') · Codex 가 조용히 정한 값은 '정한 것' 줄과 DECISIONS 로 드러난다 · 제출 15분 전 브리핑을 읽는다
+- 답 쓰는 틀: 결론 한 문장 → 이유 두 가지(실무자 답·데이터 숫자) → 버린 대안과 이유 → 확인 방법과 숫자 → 한계 한 줄. 질문 전제가 실제와 다르면 첫 줄에 "실제로는 ~로 구현했습니다"
 
 ## 들어 있는 것
 
@@ -65,6 +78,7 @@ codex        # 신뢰 확인에서 '신뢰' → /status 로 AGENTS.md · /skills
 | `prompts/00~09` | `.agents/kit/CARDS.md` (한 파일로 합침) | 단계별 프롬프트 카드 (코드 블록 1~4줄) |
 | `docs-templates/` | `docs/` | AGREEMENT · STATUS · DECISIONS · VERIFICATION · HANDOFF 틀 |
 | `scripts/install.sh` | | 설치 (덮어쓰기 없음) · git 첫 커밋 · 환경 점검 · 데이터 점검 |
+| `scripts/last.sh` | `.agents/kit/last.sh` | 지난 커밋 한눈에 보기: 파일 · 새 결정 줄 · 새 검증 줄 · 아직 커밋 안 된 변경 (`bash .agents/kit/last.sh [커밋 수]`) |
 | `scripts/envcheck.sh` | `docs/ENV.md` 를 만든다 | python · node · git · codex 판 · 파이썬 패키지 · pypi/npm/github 접속 · 메모리 |
 | `templates/data/profile_data.py` | `.agents/kit/templates/data` | CSV·TSV·XLSX 점검: 중복 · 빈 칸 · 표기만 다른 값(degC=C) · 줄임 표기(L1=line-1) · 시간대·날짜 형식(일/월/연)·단위 섞임 · 묶음별 범위(`--by 열`, 없으면 자동) |
 | `templates/report/report.py` | `.agents/kit/templates/report` | 한 장 HTML 보고서: 숫자 타일 · 표 · 막대 · 선(기준선·사건 표시) SVG, 다크 모드 |
