@@ -15,7 +15,7 @@ codex        # 신뢰 확인에서 '신뢰' → /status 로 AGENTS.md · /skills
 - 설치가 git 도 맡는다: 저장소가 아니면 `git init` 뒤 과제 파일을 '과제 제공 파일'로, 새로 넣은 파일만 '공개 작업 도구 설치'로 커밋한다 (끄기 `KIT_NO_GIT=1`). git 이름이 없으면 이 저장소에만 '응시자'로 넣는다. `.gitignore` 가 없으면 캐시 파일(`__pycache__/` 등)을 빼는 것을 만든다
 - `git` 명령이 없을 때만: `mkdir -p /tmp/kit && curl -sL https://codeload.github.com/unikaive730/ai-coding-task-kit/tar.gz/main | tar xz -C /tmp/kit --strip-components=1 && bash /tmp/kit/scripts/install.sh`
 - 접속이 차단돼 안 되면 다른 경로를 찾지 않는다. 플랫폼의 '문제 신고'를 하고 아래 '설치가 아예 안 될 때'로 진행한다
-- 설치는 사람이 한다. Codex 기본 권한(workspace-write)에서는 `.agents` · `.git` 이 읽기 전용이라 승인 창이 뜬다. 그 뒤 Codex 의 첫 커밋 때 승인 창이 `git add` · `git commit` 차례로 두 번 뜬다. 둘 다 '다시 묻지 않기'(p)를 고르면 새 탭의 codex 도 다시 묻지 않는다(판에 따라 커밋 메시지까지 묶여 저장돼 커밋마다 다시 뜨면 그때마다 p)
+- 설치는 사람이 한다. Codex 기본 권한(workspace-write)에서는 `.agents` · `.git` 이 읽기 전용이라 승인 창이 뜬다. 그 뒤 Codex 는 커밋을 `bash .agents/kit/commit.sh` 한 명령으로 한다(메시지·파일 목록은 `.commit-msg`·`.commit-files`, git 에서 빠져 있다). 첫 커밋 승인 창에서 '다시 묻지 않기'(p) 한 번이면 끝까지 안 뜬다(탭 2 는 `commit.sh 2` 에서 한 번 더). 늘 같은 명령이라 커밋 메시지가 바뀌어도 다시 묻지 않는다
 - 이미 있는 파일은 덮어쓰지 않는다. 과제에 AGENTS.md 가 있으면 그대로 두고 `AGENTS.override.md` 에 과제 지침 + 작업 원칙을 합친다 (합쳐서 30KB 가 넘으면 스킬 `kit-rules` 만 넣고 첫 요청에 `$kit-rules` 를 붙이라고 안내). `/status` 의 AGENTS 목록에 AGENTS.override.md 가 없는 판이면 첫 요청 맨 앞에 `$kit-rules` 를 붙인다
 - 신뢰하지 않은 폴더에서는 AGENTS.md 를 읽지 않는 판이 있다. 신뢰 확인에서 '신뢰'를 고른다
 - `/skills` 또는 `$` 로 스킬 4개(handoff · interview-requirements · plan-delegate · verify-submit)를 확인한다. 안 보이면 `mkdir -p .codex && mv .agents/skills .codex/skills` 후 codex 를 새로 시작한다. 두 곳에 같이 두면 같은 스킬이 두 번 뜬다
@@ -50,7 +50,7 @@ codex        # 신뢰 확인에서 '신뢰' → /status 로 AGENTS.md · /skills
 - 구현 요청의 답은 칸 이름이 정해진 5줄이다: `바뀐 것` · `숫자` · `정한 것`(DECISIONS 에 쓴 결정 이름 전부) · `확인` · `다음`. 질문·계획·검사·브리핑은 카드가 정한 꼴에 `정한 것:` 한 줄만 붙인다. 기다리는 동안 이것과 `bash .agents/kit/last.sh`(지난 커밋 파일 · 새 결정 줄 · 검증 줄, 토큰 0)로 따라간다
 - 스킬은 `$이름` 으로 부른다. Codex 는 목록의 설명을 보고 SKILL.md 를 한 번 읽는다(대화마다 한 번)
 - 스킬을 못 읽는 판이어도 AGENTS.md 에 흐름·질문 기준·문서 상한·요청 4요소·검증·커밋 기준이 다 들어 있다
-- 커밋은 Codex 가 요청마다 실행 확인 뒤 스스로 한다(무엇을·왜 한 줄). 나란히 맡긴 대화는 자기 파일만 `git add` 해서 커밋한다
+- 커밋은 Codex 가 요청마다 실행 확인 뒤 스스로 한다(무엇을·왜 한 줄). 나란히 맡긴 대화는 자기 파일만 커밋한다(탭 N 은 `.commit-files-N` · `commit.sh N`)
 - 문서 상한: AGREEMENT 80줄 · STATUS 40줄 · VERIFICATION 40줄 · DECISIONS 는 표 한 줄씩. 요청마다 다시 읽는 문서라 길면 토큰이 늘어난다
 - 서버는 사람이 다른 터미널 탭에서 띄우고 그 탭을 닫지 않는다. Codex 의 서버 검사는 탭 1 이 `python3 verify.py`, 탭 2 가 `python3 check_acceptance.py` 한 명령 · PORT=0 이라 겹치지 않는다
 

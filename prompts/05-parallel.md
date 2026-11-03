@@ -4,16 +4,17 @@
 
 ```
 $verify-submit 목표: docs/AGREEMENT.md 성공 기준·과제 요구와 docs/STATUS.md 완료 조건·제출물 형식만 보고 독립 합격 검사 check_acceptance.py 를 만들어. 구현 코드는 읽지 마.
-제약: 표준 라이브러리, 이 파일만 고치고 이 파일만 git add 해서 커밋(index.lock 이면 잠깐 뒤 다시). 아직 없는 결과는 '없음'으로 실패를 보이고, 정답이 없거나 구현을 봐야만 아는 항목은 '확인 불가'로 따로 세어(실패 아님, 나머지가 다 통과면 종료 0), 서버가 있으면 PORT=0 으로 이 파일 안에서 띄워. 지금은 실패해도 된다.
+제약: 표준 라이브러리, 이 파일만 고치고 커밋은 .commit-msg-2·.commit-files-2(이 파일 하나)를 쓰고 bash .agents/kit/commit.sh 2. 아직 없는 결과는 '없음'으로 실패를 보이고, 정답이 없거나 구현을 봐야만 아는 항목은 '확인 불가'로 따로 세어(실패 아님, 나머지가 다 통과면 종료 0), 서버가 있으면 PORT=0 으로 이 파일 안에서 띄워. 지금은 실패해도 된다.
 완료: python3 check_acceptance.py 가 끝까지 돌면 커밋. 답은 검사 항목 5줄.
 ```
 
 탭 1 이 단위를 커밋할 때마다 탭 2 에:
 
 ```
-읽기만: git show --stat HEAD 와 바뀐 코드를 docs/AGREEMENT.md 와 대조해 끝난 단위의 틀린 가정·빠진 요구(AGREEMENT 규칙 줄 가운데 코드·DECISIONS 어디에도 처리가 없는 줄 포함)를 3개 이하로 찾고 python3 check_acceptance.py 를 돌려. 파일은 고치지 마. 답은 5줄(찾은 것 · 검사 결과 숫자).
+읽기만: git log --stat 으로 지난 대조 뒤의 커밋(처음이면 최근 3개)을 보고 그 diff 만(파일 전체 말고) docs/AGREEMENT.md 와 대조해 끝난 단위의 틀린 가정·빠진 요구(AGREEMENT 규칙 줄 가운데 코드·DECISIONS 어디에도 처리가 없는 줄 포함)를 3개 이하로 찾고 python3 check_acceptance.py 를 돌려. 파일은 고치지 마. 답은 5줄(찾은 것 · 검사 결과 숫자).
 ```
 
+- 탭 2·5 의 첫 커밋 때 `commit.sh 2`(또는 5) 승인 창이 한 번 뜬다 → p · 탭 2 codex 도 아래 줄이 GPT-6.1-Sol medium 인지 본다
 - 찾은 것이 맞아 보이면 그 줄을 탭 1 다음 요청 맨 앞에 붙인다. 검사와 구현의 숫자가 다르면 어느 쪽이 요구를 잘못 읽었는지 둘 중 한 탭에 묻는다(그 차이 자체가 서술형에서 설명할 거리다)
 - 06 의 '다른 계산으로 대조'는 check_acceptance.py 결과로 갈음한다
 
@@ -21,11 +22,11 @@ $verify-submit 목표: docs/AGREEMENT.md 성공 기준·과제 요구와 docs/ST
 
 ```
 docs/STATUS.md 의 <번호>번 단위·'나란히 계약'과 docs/AGREEMENT.md 성공 기준·docs/DECISIONS.md 만 읽고 그 단위를 만들어. 고칠 파일: <파일>과 그 테스트 파일. 다른 파일·docs/ 는 건드리지 마. 모르는 것은 묻지 말고 (추정)으로 정해 답에 적어.
-완료: 테스트 3개 이내(입력은 계약 형식의 작은 예시)가 통과하면 그 두 파일만 git add 해서 커밋(index.lock 이면 잠깐 뒤 다시). 답은 3줄.
+완료: 테스트 3개 이내(입력은 계약 형식의 작은 예시)가 통과하면 그 두 파일만 커밋(.commit-msg-5·.commit-files-5 를 쓰고 bash .agents/kit/commit.sh 5). 답은 3줄.
 ```
 
 탭 1 codex 에는 이 한 줄을 붙인다.
 
 ```
-<파일>은 다른 대화가 맡았으니 건드리지 마. 그동안 <번호>번 단위를 하고, 커밋은 네 파일만 git add 해서.
+<파일>은 다른 대화가 맡았으니 건드리지 마. 그동안 <번호>번 단위를 하고, 커밋은 .commit-files 에 네 파일만.
 ```
