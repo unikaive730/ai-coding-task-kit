@@ -111,7 +111,7 @@ f=AGENTS.md; [ -e AGENTS.override.md ] && f=AGENTS.override.md
 echo
 echo "설치 끝: $f · .agents/skills ($(ls .agents/skills | tr '\n' ' ')) · docs/*.md · .agents/kit"
 echo "다음: codex → 신뢰 확인에서 '신뢰' → /status · /skills 확인 → 카드 01 붙이기"
-echo "  커밋은 Codex 가 요청마다 bash .agents/kit/commit.sh 한 명령으로 한다. 첫 커밋 때 그 승인 창에서 '다시 묻지 않기'(p) 한 번(탭 2 는 commit.sh 2 에서 한 번 더)."
+echo "  커밋은 Codex 가 요청마다 bash .agents/kit/commit.sh 한 명령으로 한다. 첫 커밋 때 그 승인 창에서 '다시 묻지 않기'(p) 한 번(탭 2·5 는 보통 안 뜬다)."
 [ -e AGENTS.override.md ] && echo "  /status 의 AGENTS 목록에 AGENTS.override.md 가 없으면 첫 요청 맨 앞에 \$kit-rules 를 붙입니다."
 echo "기다리는 동안: 터미널 탭 3(사람 셸)에서 bash .agents/kit/last.sh (지난 커밋 파일 · 새 결정 줄 · 검증 줄)"
 echo "카드: .agents/kit/CARDS.md (에디터로 열어 두고 복사 → 터미널에는 Ctrl+Shift+V, 탐색기에 안 보이면 Ctrl+P 로 CARDS.md) · 스킬은 \$이름 으로 부른다 (\$interview-requirements · \$plan-delegate · \$verify-submit · \$handoff)"
