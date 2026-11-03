@@ -1,7 +1,7 @@
 """표 데이터 첫 점검 (CSV·TSV·XLSX). 표준 라이브러리만 쓴다 (설치 없음).
 
 실행: python3 profile_data.py <파일> [<파일> ...] [--by 열[,열]] [--max-rows 500000]
-출력: 행·열 · 완전 중복 행 · 열마다 형식·빈 칸·값 종류 · 숫자 범위 · 확인할 것(질문 후보)
+출력: 행·열 · 완전 중복 행 · 열마다 형식·빈 칸·값 종류 · 숫자 범위 · 날짜 최소·최대 · 확인할 것(질문 후보)
 확인할 것: 표기만 다른 값(Etch01·ETCH-01·degC=C) · 줄임 표기(L1·line-1) · 시간대·날짜 형식 섞임(일/월/연 포함)
            · 단위 섞임 · 빈 칸 · 숫자 열 속 글자 · 극단값
 --by 열[,열]: 그 열 값마다 숫자 열의 최소·평균·최대 (예: --by equipment,sensor 로 설비·센서별 단위 차이 찾기)
@@ -22,6 +22,7 @@ UNIT_RE = re.compile(r"^[+-]?\d[\d,]*(\.\d+)?\s*([A-Za-z%°µ/가-힣]+[A-Za-z0-
 DATE_RE = re.compile(r"^(\d{4}[-/.]\d{1,2}[-/.]\d{1,2}|\d{1,2}[-/.]\d{1,2}[-/.]\d{4})([ T]\d{1,2}:\d{2}(:\d{2})?(\.\d+)?)?(Z|[+-]\d{2}:?\d{2})?$")
 TZ_RE = re.compile(r"(Z|[+-]\d{2}:?\d{2})$")
 DMY_RE = re.compile(r"^(\d{1,2})[-/.](\d{1,2})[-/.]\d{4}")
+YMD_RE = re.compile(r"^(\d{4})[-/.](\d{1,2})[-/.](\d{1,2})(.*)$")
 KEEP = 20000
 TAB = chr(9)
 
@@ -111,6 +112,7 @@ class Col:
         self.lo, self.hi = math.inf, -math.inf
         self.units, self.shapes, self.tz, self.text_in_num = Counter(), Counter(), Counter(), Counter()
         self.dmy = [0, 0, 0]  # 연도가 끝에 오는 날짜: 앞자리 최대 · 둘째 최대 · 개수
+        self.dlo = self.dhi = ""  # 연도가 앞에 오는 날짜의 최소·최대 (기준일 밖 기록이 보이게)
 
     def add(self, v):
         self.n += 1
@@ -137,6 +139,11 @@ class Col:
             self.shapes[re.sub(r"\d", "9", s)] += 1
             z = TZ_RE.search(s[10:])
             self.tz[z.group(1) if z else "없음"] += 1
+            y = YMD_RE.match(s)
+            if y:
+                k = f"{y.group(1)}-{int(y.group(2)):02d}-{int(y.group(3)):02d}{y.group(4)}"
+                self.dlo = min(self.dlo, k) if self.dlo else k
+                self.dhi = max(self.dhi, k)
             m = DMY_RE.match(s)
             if m:
                 a, b = int(m.group(1)), int(m.group(2))
@@ -215,6 +222,8 @@ def profile(path, by=None, max_rows=500000):
                 checks.append(f"{name}: 평균±6표준편차 밖 값 있음 (최소 {fmt(c.lo)} · 최대 {fmt(c.hi)}) · 단위·오기·실제 이상인지")
             if c.text_in_num:
                 checks.append(f"{name}: 숫자 열에 글자 값 {list(c.text_in_num)[:4]}")
+        elif k == "날짜" and c.dlo:
+            desc = f"최소 {c.dlo[:16]} · 최대 {c.dhi[:16]} · " + " · ".join(f"{v[:24]}({cnt})" for v, cnt in c.vals.most_common(3))
         else:
             top = kinds if k == "글자" and kinds <= 20 else (8 if kinds <= 8 else 5)
             desc = " · ".join(f"{v[:24]}({cnt})" for v, cnt in c.vals.most_common(top))

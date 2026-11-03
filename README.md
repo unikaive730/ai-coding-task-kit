@@ -80,7 +80,7 @@ codex        # 신뢰 확인에서 '신뢰' → /status 로 AGENTS.md · /skills
 | `scripts/install.sh` | | 설치 (덮어쓰기 없음) · git 첫 커밋 · 환경 점검 · 데이터 점검 |
 | `scripts/last.sh` | `.agents/kit/last.sh` | 지난 커밋 한눈에 보기: 파일 · 새 결정 줄 · 새 검증 줄 · 아직 커밋 안 된 변경 (`bash .agents/kit/last.sh [커밋 수]`) |
 | `scripts/envcheck.sh` | `docs/ENV.md` 를 만든다 | python · node · git · codex 판 · 파이썬 패키지 · pypi/npm/github 접속 · 메모리 |
-| `templates/data/profile_data.py` | `.agents/kit/templates/data` | CSV·TSV·XLSX 점검: 중복 · 빈 칸 · 표기만 다른 값(degC=C) · 줄임 표기(L1=line-1) · 시간대·날짜 형식(일/월/연)·단위 섞임 · 묶음별 범위(`--by 열`, 없으면 자동) |
+| `templates/data/profile_data.py` | `.agents/kit/templates/data` | CSV·TSV·XLSX 점검: 중복 · 빈 칸 · 표기만 다른 값(degC=C) · 줄임 표기(L1=line-1) · 시간대·날짜 형식(일/월/연)·단위 섞임 · 날짜 최소·최대 · 묶음별 범위(`--by 열`, 없으면 자동) |
 | `templates/report/report.py` | `.agents/kit/templates/report` | 한 장 HTML 보고서: 숫자 타일 · 표 · 막대 · 선(기준선·사건 표시) SVG, 다크 모드 |
 | `templates/web-python` | `.agents/kit/templates/web-python` | 표준 라이브러리 서버 (0.0.0.0:8000) · JSON API · 정적 화면 |
 | `templates/web-node` | `.agents/kit/templates/web-node` | Node 내장 모듈 서버 (0.0.0.0:3000) · JSON API · 정적 화면 |
