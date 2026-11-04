@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # 커밋 한 명령(늘 같은 명령이라 승인 창에서 p 한 번이면 다시 안 묻는다)
-#   탭 1: .commit-msg(메시지 한 줄) · .commit-files(파일 경로 한 줄에 하나) 를 쓰고  bash .agents/kit/commit.sh
+#   탭 1: .commit-msg(첫 줄 · 빈 줄 · 본문 1~3줄) · .commit-files(파일 경로 한 줄에 하나) 를 쓰고  bash .agents/kit/commit.sh
 #   탭 N: .commit-msg-N · .commit-files-N 을 쓰고  bash .agents/kit/commit.sh N
 t=${1:+-$1}; m=".commit-msg$t"; f=".commit-files$t"
 cd "$(git rev-parse --show-toplevel 2>/dev/null || pwd)" || exit 1
