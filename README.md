@@ -18,7 +18,7 @@ codex        # 신뢰 확인에서 '신뢰' → /status 로 AGENTS.md · /skills
 - 설치는 사람이 한다. Codex 기본 권한(workspace-write)에서는 `.agents` · `.git` 이 읽기 전용이라 승인 창이 뜬다. 그 뒤 Codex 는 커밋을 `bash .agents/kit/commit.sh` 한 명령으로 한다(메시지·파일 목록은 `.commit-msg`·`.commit-files`, git 에서 빠져 있다). 첫 커밋 승인 창에서 '다시 묻지 않기'(p) 한 번이면 끝까지 안 뜬다(탭 2·5 는 보통 안 뜨고, 뜨면 p). 늘 같은 명령이라 커밋 메시지가 바뀌어도 다시 묻지 않는다
 - 이미 있는 파일은 덮어쓰지 않는다. 과제에 AGENTS.md 가 있으면 그대로 두고 `AGENTS.override.md` 에 과제 지침 + 작업 원칙을 합친다 (합쳐서 30KB 가 넘으면 스킬 `kit-rules` 만 넣고 첫 요청에 `$kit-rules` 를 붙이라고 안내). `/status` 의 AGENTS 목록에 AGENTS.override.md 가 없는 판이면 첫 요청 맨 앞에 `$kit-rules` 를 붙인다
 - 신뢰하지 않은 폴더에서는 AGENTS.md 를 읽지 않는 판이 있다. 신뢰 확인에서 '신뢰'를 고른다
-- `/skills` 또는 `$` 로 스킬 12개(handoff · interview-requirements · plan-delegate · verify-submit · data-cleaning · optimize-constraints · web-api-build · llm-feature · report-output · debug-fix · metric-improve · edge-cases)를 확인한다. 안 보이면 먼저 플랫폼 도움말에 '이 환경의 Skill 적용 방법'을 한 번 묻고, 그래도 안 되면 `mkdir -p .codex && mv .agents/skills .codex/skills` 후 codex 를 새로 시작한다. `$이름` 이 안 먹으면 `/skills` 목록에서 골라 부른다. 두 곳에 같이 두면 같은 스킬이 두 번 뜬다
+- `/skills` 또는 `$` 로 스킬 15개(task-reading · problem-types · chatbot-agent · handoff · interview-requirements · plan-delegate · verify-submit · data-cleaning · optimize-constraints · web-api-build · llm-feature · report-output · debug-fix · metric-improve · edge-cases)를 확인한다. 안 보이면 먼저 플랫폼 도움말에 '이 환경의 Skill 적용 방법'을 한 번 묻고, 그래도 안 되면 `mkdir -p .codex && mv .agents/skills .codex/skills` 후 codex 를 새로 시작한다. `$이름` 이 안 먹으면 `/skills` 목록에서 골라 부른다. 두 곳에 같이 두면 같은 스킬이 두 번 뜬다
 - 설치가 끝나면 `docs/ENV.md`(파이썬·노드·패키지·바깥 접속) 와 `docs/DATA_PROFILE.md`(CSV·XLSX 점검과 '확인할 것') 가 생긴다
 
 ### 설치가 아예 안 될 때 (첫 요청에 직접 친다)
