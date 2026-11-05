@@ -9,6 +9,8 @@
 4. 구현: 한 번에 한 단위. 실행·검증 → `docs/VERIFICATION.md` → 커밋
 5. 마무리 `$verify-submit`: 문서와 제출 점검을 한 요청으로
 
+상황이 맞으면 사람이 부르지 않아도 스킬을 스스로 쓴다: 데이터 `data-cleaning` · 배정·편성·경로 `optimize-schedule` · 웹·API `web-api-build` · LLM `llm-feature` · 보고서 `report-output` · 오류 `debug-fix` · 지표 미달 `metric-improve` · 단위 마무리 `edge-cases`. 필요한 스킬만 읽고 같은 대화에서 다시 읽지 않는다. 스킬과 이 문서가 다르면 이 문서를, 과제 안내와 다르면 과제 안내를 따른다.
+
 ## 문서
 - 바뀐 칸만 고친다(전체를 다시 쓰지 않는다). 풀린 차이 줄은 지운다. 결정이 바뀌면 코드보다 문서를 먼저
 - 칸은 한 줄(40자 안팎), '계속' 줄로 나누지 않는다. 모르는 칸은 끝에 (추정)
