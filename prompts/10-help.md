@@ -24,7 +24,7 @@
 
 ## Codex 입력칸의 `/` 명령
 - `/status` : 지금 모델·추론 수준·읽은 지침 파일 보기
-- `/skills` : 쓸 수 있는 스킬 목록 보기. 15개가 보이면 된다
+- `/skills` : 쓸 수 있는 스킬 목록 보기. 16개가 보이면 된다
 - `/model` : 모델·추론 수준 고르기. GPT-6.1-Sol → Medium
 - `/new` : 새 대화. 파일·커밋은 그대로이고 대화 문맥만 비워 토큰이 준다. 창이 뜨면 1(Use current Git worktree). 추론이 기본으로 돌아가니 Medium 을 다시 본다
 
@@ -36,6 +36,7 @@
 - `$kit-rules` : 작업 원칙 묶음. 과제에 자체 AGENTS.md 가 있어 `/status` 에 AGENTS.override.md 가 안 보일 때만 카드 01 맨 앞에 붙인다
 
 ## 상황이 실제로 맞을 때만 Codex 가 스스로 쓰는 스킬 (사람이 부르지 않아도 된다. 문제 유형은 README 로 판단한다)
+- `ide-environment` : 제공 환경·과제용 API 키·미리보기·메신저·제출 구분
 - `task-reading` : 과제 안내의 금지 조항·상한·제출 형식을 원문 그대로 표로
 - `problem-types` : 문제 유형을 README 로 판단하고 유형별로 빠뜨리기 쉬운 확인을 봄
 - `chatbot-agent` : 챗봇·대화형 에이전트. 입력 축·지어내지 않기·시나리오 시험
@@ -61,7 +62,7 @@
 - 00 준비 · 01 첫 요청(과제 파악) · 02 실무자 답 넣기 · 03 계획 · 04 단위 구현 · 05 탭 2 검사 · 06 연결·검증 · 07 문서·제출 점검과 브리핑 · 08 막힐 때 · 09 넘길 때
 
 ## 승인 창과 단축키
-- 승인 창: `commit.sh`·`verify.py`·`check_acceptance.py` 는 p(다시 묻지 않기) · 그 밖은 y · LLM·외부 주소는 esc 뒤 '가짜 응답으로 시험해'
+- 승인 창: `commit.sh`·`verify.py`·`check_acceptance.py` 는 p(다시 묻지 않기) · 그 밖은 y · LLM·외부 주소는 README 가 요구한 과제용 키 호출이면 y, 그 밖은 esc 뒤 '가짜 응답으로 시험해'
 - 터미널 붙여넣기 `Ctrl+Shift+V` · 터미널 복사는 글자를 선택한 뒤 `Ctrl+C`(선택 없이 누르면 실행 중인 codex·서버가 멈춘다) · 줄바꿈 `Alt+Enter`
 - 파일 찾기 `Ctrl+P` · 내용 찾기 `Ctrl+Shift+F` · 탐색기 접기 `Ctrl+B`
 
