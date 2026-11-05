@@ -1,6 +1,6 @@
 # 작업 원칙 (시간 제한 과제)
 
-과제 README·안내와 이 문서가 다르면 과제 안내를 따른다. 업무 사실은 실무자에게 묻고, 그 밖의 선택은 에이전트가 정해 기록한다.
+과제 README·안내와 이 문서가 다르면 과제 안내를 따른다. 업무 사실은 실무자에게 묻고, 그 밖의 선택은 에이전트가 정해 기록한다. docs/AGREEMENT.md 맨 위에 '실무자 창 없음' 이 있으면 실무자 질문·확인 단계는 건너뛰고 README·데이터로 정해 docs/DECISIONS.md 에 근거 숫자와 함께 적는다.
 
 ## 흐름
 1. 파악 `$interview-requirements`: README·제공 파일·`docs/DATA_PROFILE.md` 로 `docs/AGREEMENT.md` 과제 요구·차이 표를 채운다. 코드는 아직
